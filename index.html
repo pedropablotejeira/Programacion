@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presentación Interactiva - Fundamentos de Programación</title>
+  <style>
+    :root {
+      /* Paleta Tecnológica & Programación: Cyan Neón, Púrpura Código, Azul de Servidores */
+      --bg-dark: #070c18;
+      --card-bg: #0d172a;
+      --card-inner: #132238;
+      --accent-cyan: #00f2fe;
+      --accent-blue: #4facfe;
+      --accent-purple: #7f53ac;
+      --accent-green: #10b981;
+      --accent-gold: #ffb703;
+      --text-light: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-tech: #1e3a8a;
+      --tech-grid: rgba(0, 242, 254, 0.07);
+      --cyan-glow: rgba(0, 242, 254, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 25%, rgba(0, 242, 254, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 85% 75%, rgba(127, 83, 172, 0.15) 0%, transparent 45%),
+        repeating-linear-gradient(0deg, transparent, transparent 39px, var(--tech-grid) 39px, var(--tech-grid) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, var(--tech-grid) 39px, var(--tech-grid) 40px),
+        radial-gradient(ellipse at center, rgba(13, 23, 42, 0.92) 0%, rgba(7, 12, 24, 0.99) 100%);
+      background-attachment: fixed;
+      color: var(--text-light);
+      margin: 0;
+      padding: 20px 10px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* PORTADA DE PRESENTACIÓN */
+    .cover-page {
+      background: linear-gradient(145deg, #0e1a30, #080d1a);
+      color: var(--text-light);
+      border: 2px solid var(--accent-cyan);
+      border-radius: 14px;
+      padding: 38px 25px;
+      box-shadow: 0 15px 45px rgba(0,0,0,0.85), inset 0 0 60px rgba(0, 242, 254, 0.08), 0 0 25px rgba(0, 242, 254, 0.2);
+      text-align: center;
+      margin-bottom: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bg-icon-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg-icon {
+      position: absolute;
+      opacity: 0.35;
+      color: var(--accent-cyan);
+      filter: drop-shadow(0 0 12px var(--cyan-glow));
+      animation: floatSlow 10s ease-in-out infinite alternate;
+    }
+
+    .bg-icon.code-terminal { top: -20px; right: -20px; width: 220px; height: 220px; opacity: 0.45; }
+    .bg-icon.flowchart { bottom: 10px; left: -10px; width: 200px; height: 200px; opacity: 0.40; animation-delay: -2s; }
+    .bg-icon.variable-box { top: 15%; left: 2%; width: 180px; height: 140px; opacity: 0.45; animation-delay: -5s; }
+    .bg-icon.binary-nodes { bottom: -10px; left: 35%; width: 160px; height: 160px; opacity: 0.35; animation-delay: -3.5s; }
+
+    @keyframes floatSlow {
+      0% { transform: translateY(0px) rotate(0deg) scale(1); }
+      50% { transform: translateY(-10px) rotate(2deg) scale(1.02); }
+      100% { transform: translateY(8px) rotate(-2deg) scale(0.98); }
+    }
+
+    .cover-content-relative {
+      position: relative;
+      z-index: 2;
+    }
+
+    .cover-section {
+      margin-bottom: 24px;
+    }
+
+    .cover-section h2 {
+      font-size: 2rem;
+      color: var(--accent-cyan);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      text-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+    }
+
+    .info-card {
+      background: rgba(13, 23, 42, 0.85);
+      border: 1px solid var(--border-tech);
+      border-radius: 10px;
+      padding: 18px;
+      max-width: 600px;
+      margin: 0 auto 20px auto;
+      text-align: left;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      border-bottom: 1px dashed rgba(148, 163, 184, 0.2);
+      padding-bottom: 4px;
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .info-label {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .info-val {
+      color: var(--accent-cyan);
+      font-weight: bold;
+    }
+
+    /* Botones */
+    .btn-enter {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      color: #ffffff;
+      font-weight: bold;
+      padding: 15px 38px;
+      border-radius: 8px;
+      border: 1px solid var(--accent-cyan);
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4), 0 0 15px rgba(0, 242, 254, 0.3);
+      letter-spacing: 0.8px;
+    }
+
+    .btn-enter:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 25px rgba(0, 242, 254, 0.6);
+    }
+
+    .btn-back {
+      display: inline-block;
+      background: var(--card-bg);
+      color: var(--accent-cyan);
+      border: 1px solid var(--accent-cyan);
+      padding: 10px 22px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-back:hover {
+      background: var(--border-tech);
+      color: #ffffff;
+    }
+
+    /* Encabezado e Índice de Navegación */
+    header#portfolio-header {
+      background: linear-gradient(145deg, #0e1a30, #080d1a);
+      border: 2px solid var(--accent-cyan);
+      border-radius: 12px;
+      padding: 22px;
+      text-align: center;
+      margin-bottom: 25px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.7);
+    }
+
+    header#portfolio-header h1 {
+      color: var(--accent-cyan);
+      margin: 0 0 8px 0;
+      font-size: 2rem;
+    }
+
+    .weeks-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .week-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border-tech);
+      color: var(--text-light);
+      padding: 10px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      text-align: center;
+      font-size: 0.85rem;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .week-btn:hover {
+      background: var(--accent-purple);
+      border-color: var(--accent-cyan);
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+
+    /* Tarjetas de Secciones */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 25px;
+    }
+
+    .card {
+      background: linear-gradient(160deg, #0d172a, #09101f);
+      border: 1px solid var(--border-tech);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      position: relative;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue), var(--accent-purple));
+    }
+
+    .card-content {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .week-badge {
+      align-self: flex-start;
+      background: rgba(0, 242, 254, 0.15);
+      color: var(--accent-cyan);
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-bottom: 12px;
+      border: 1px solid rgba(0, 242, 254, 0.4);
+      text-transform: uppercase;
+    }
+
+    .card h2 {
+      margin: 0 0 12px 0;
+      font-size: 1.3rem;
+      color: #ffffff;
+    }
+
+    .card h3 {
+      font-size: 0.95rem;
+      color: var(--accent-cyan);
+      margin: 12px 0 6px 0;
+      border-left: 3px solid var(--accent-blue);
+      padding-left: 8px;
+    }
+
+    .card p, .card ul {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      margin: 0 0 10px 0;
+    }
+
+    .card ul {
+      padding-left: 18px;
+    }
+
+    .card li {
+      margin-bottom: 4px;
+    }
+
+    /* Bloques de Código */
+    .code-block {
+      background: #040812;
+      border: 1px solid #1e293b;
+      border-left: 3px solid var(--accent-green);
+      border-radius: 6px;
+      padding: 10px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: #38bdf8;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      margin-top: 8px;
+    }
+
+    /* Diagrama SVG interactivo */
+    .svg-diagram {
+      width: 100%;
+      height: auto;
+      background: #050914;
+      border-radius: 8px;
+      border: 1px solid var(--border-tech);
+      padding: 10px;
+      margin: 10px 0;
+    }
+
+    /* Tabla de Tipos de Datos */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.85rem;
+    }
+
+    .data-table th, .data-table td {
+      border: 1px solid var(--border-tech);
+      padding: 6px 10px;
+      text-align: left;
+    }
+
+    .data-table th {
+      background-color: var(--card-inner);
+      color: var(--accent-cyan);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Sección Bibliografía */
+    .biblio-list {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .biblio-list li {
+      margin-bottom: 12px;
+    }
+
+    .biblio-list a {
+      color: var(--accent-blue);
+      text-decoration: none;
+      overflow-wrap: anywhere;
+      word-break: break-all;
+      font-family: 'Consolas', monospace;
+      font-size: 0.8rem;
+    }
+
+    .biblio-list a:hover {
+      color: var(--accent-cyan);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- PORTADA CON REQUISITOS DOCENTES -->
+    <div class="logo-container">
+      <img src="images/university-logo.png" alt="Logo Institucional" class="cover-logo" onerror="this.src='https://placehold.co/440x110/0d172a/00f2fe?text=Image+Cover+I'">
+    </div>
+
+    <div id="cover-view">
+      <div class="cover-page">
+        
+        <div class="bg-icon-layer" aria-hidden="true">
+          <!-- Ícono Terminal -->
+          <svg class="bg-icon code-terminal" viewBox="0 0 100 100" fill="currentColor">
+            <rect x="10" y="20" width="80" height="60" rx="6" fill="none" stroke="currentColor" stroke-width="4"/>
+            <path d="M22 48 L32 55 L22 62" fill="none" stroke="currentColor" stroke-width="3"/>
+            <line x1="38" y1="62" x2="52" y2="62" stroke="currentColor" stroke-width="3"/>
+          </svg>
+          <!-- Ícono Diagrama de Flujo -->
+          <svg class="bg-icon flowchart" viewBox="0 0 200 100" fill="currentColor">
+            <rect x="15" y="35" width="45" height="30" rx="3" fill="none" stroke="currentColor" stroke-width="3"/>
+            <polygon points="100,50 120,35 140,50 120,65" fill="none" stroke="currentColor" stroke-width="3"/>
+            <line x1="60" y1="50" x2="100" y2="50" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </div>
+
+        <div class="cover-content-relative">
+          <div class="cover-section">
+            <h1>Investigación No.1</h1>
+            <h2>Fundamentos de Programación</h2>
+          </div>
+
+          <div class="info-card">
+            <div class="info-row">
+              <span class="info-label">Estudiante:</span>
+              <span class="info-val">Pedro Pablo Tejeira</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Cédula:</span>
+              <span class="info-val">8-741-1265</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Asignatura:</span>
+              <span class="info-val">Programación I</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Profesora:</span>
+              <span class="info-val">Lleine Quintero</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Fecha:</span>
+              <span class="info-val">29 de Septiembre, 2026</span>
+            </div>
+          </div>
+
+          <button class="btn-enter" onclick="openPortfolio()">Iniciar Presentación →</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- VISTA PRINCIPAL: SECCIONES ORGANIZADAS DE LA INVESTIGACIÓN -->
+    <div id="portfolio-view" class="hidden">
+      
+      <button class="btn-back" onclick="showCover()">← Volver a la Portada</button>
+
+      <header id="portfolio-header">
+        <h1>Fundamentos de Programación</h1>
+        <p style="text-align: justify; padding: 0 15px;">Investigar y explicar los fundamentos de la programación, comprendiendo la función de las variables, constantes, tipos de datos, entrada y salida de datos, pseudocódigo, diagramas de flujo, estructuras condicionales y ciclos repetitivos, para reconocer cómo estos elementos se integran en la construcción de algoritmos.</p>
+      </header>
+
+      <!-- Menú Navegador por Secciones -->
+      <div class="weeks-nav">
+        <button class="week-btn" onclick="filterWeek('sec-1')">01.Pseudocódigo</button>
+        <button class="week-btn" onclick="filterWeek('sec-2')">02.Diagramas</button>
+        <button class="week-btn" onclick="filterWeek('sec-3')">03.Variables</button>
+        <button class="week-btn" onclick="filterWeek('sec-4')">04.Constantes</button>
+        <button class="week-btn" onclick="filterWeek('sec-5')">05.Tipos Datos</button>
+        <button class="week-btn" onclick="filterWeek('sec-6')">06.Entrada/Salida</button>
+        <button class="week-btn" onclick="filterWeek('sec-7')">07.Condicionales</button>
+        <button class="week-btn" onclick="filterWeek('sec-8')">08.Ciclos</button>
+        <button class="week-btn" onclick="filterWeek('sec-9')">09.Relación</button>
+        <button class="week-btn" onclick="filterWeek('sec-10')">10.Conclusión</button>
+        <button class="week-btn" onclick="filterWeek('sec-11')">11.Bibliografía</button>
+      </div>
+
+      <main class="grid">
+
+        <!-- Sección 1 -->
+        <article class="card week-card sec-1">
+          <div class="card-content">
+            <span class="week-badge">Sección 01</span>
+            <h2>Pseudocódigo</h2>
+            <h3>¿Qué es?</h3>
+            <p>Es una forma de describir un algoritmo usando un lenguaje similar al natural (español, inglés), combinado con estructuras propias de la programación, pero sin seguir la sintaxis estricta de ningún lenguaje de programación en particular. Esto quiere decir que podemos llevar o adaptar este tipo de código a muchos de los lenguajes de programación conocidos.</p>
+            <p>Es como un "borrador" o "boceto" de un programa: describe la lógica y los pasos a seguir, pero de forma legible para cualquier persona, no solo para una computadora.</p>
+
+            <h3>¿Para qué sirve?</h3>
+            <ul>
+              <li>Planificar la solución de un problema antes de escribir código real.</li>
+              <li>Estructurado: usa palabras clave como Inicio, Fin, Si, Mientras, Para, Leer, Escribir.</li>
+              <li>Fácil de entender: cualquier persona con conocimientos básicos de lógica puede leerlo.</li>
+              <li>No es ejecutable: no puede correr directamente en una computadora, debe traducirse a un lenguaje real.</li>
+              <li>Flexible: no tiene una norma única, aunque sí convenciones comunes.</li>
+              <li>Enfocado en la lógica, no en detalles técnicos (como tipos de datos exactos o memoria).</li>
+            </ul>
+            
+            <h3>Características</h3>
+            <ul>
+              <li>Independiente del lenguaje: no está atado a Python, Java, C++, etc.</li>
+              <li>Comunicar ideas entre programadores sin importar el lenguaje que usen.</li>
+              <li>Facilitar el aprendizaje de la lógica de programación sin preocuparse por errores de sintaxis.</li>
+              <li>Detectar errores lógicos antes de invertir tiempo escribiendo código.</li>
+              <li>Servir de puente entre el diagrama de flujo (representación gráfica) y el código fuente (representación en un lenguaje específico).</li>
+            </ul>
+
+            <h3>Ejemplo Práctico:</h3>
+            <div>
+              <img src="images/pseudocodigo.png" alt="Pictures 01" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
+            </div>
+          </div>
+        </article>
+
+        <!-- Sección 2 -->
+        <article class="card week-card sec-2">
+          <div class="card-content">
+            <span class="week-badge">Sección 02</span>
+            <h2>Diagramas de Flujo</h2>
+            <h3>¿Qué es?</h3>
+            <p>Es una representación gráfica de un algoritmo o proceso, donde cada paso se representa mediante símbolos o figuras conectadas por flechas que indican el orden y la dirección en que deben ejecutarse las acciones.</p>
+            <p>Es una herramienta visual que permite "ver" la lógica de un programa o proceso antes de convertirlo en código.</p>
+            
+            <h3>¿Para qué sirve?</h3>
+            <ul>
+              <li>Visualizar de forma clara la secuencia de pasos de un algoritmo.</li>
+              <li>Detectar errores lógicos o pasos faltantes antes de programar.</li>
+              <li>Documentar procesos para que otras personas los entiendan fácilmente.</li>
+              <li>Facilitar la comunicación entre analistas, programadores y usuarios que no tienen conocimientos técnicos.</li>
+              <li>Servir de guía para traducir la lógica a cualquier lenguaje de programación.</li>
+            </ul>      
+            
+            <h3>Símbolos Principales (Simbología Standard):</h3>
+            <div style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;">
+              <img src="images/Diagrama01.png" alt="Pictures 02" style="max-width: 39%; width: auto; height: auto;">
+              <img src="images/flujo02.jpg" alt="Pictures 03" style="max-width: 45%; width: auto; height: auto;">
+            </div>
+
+            <h3>Ejemplo de Proceso:</h3>
+            <div style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;">
+              <img src="images/Diagrama.png" alt="Pictures 04" style="max-width: 42%; width: auto; height: auto;">
+              <img src="images/flujo01.jpg" alt="Pictures 05" style="max-width: 45%; width: auto; height: auto;">
+            </div>
+          </div>
+        </article>
+
+        <!-- Sección 3 -->
+        <article class="card week-card sec-3">
+          <div class="card-content">
+            <span class="week-badge">Sección 03</span>
+            <h2>Variables</h2>
+            <h3>¿Qué son?</h3>
+            <p>Es un espacio en la memoria de la computadora que se utiliza para almacenar un valor, el cual puede cambiar durante la ejecución de un programa. Cada variable tiene un nombre (identificador) que permite referirse a ella y acceder o modificar el valor que contiene.</p>
+            <p>Se le llama "variable" precisamente porque su contenido puede variar (cambiar) a lo largo del programa, a diferencia de una constante, cuyo valor permanece fijo.</p>
+            
+            <h3>¿Para qué se utilizan?</h3>
+            <ul>
+              <li>Almacenar datos temporalmente mientras el programa se ejecuta (números, texto, resultados de operaciones, etc.).</li>
+              <li>Guardar valores ingresados por el usuario (por ejemplo, mediante Leer).</li>
+              <li>Almacenar resultados de cálculos u operaciones para usarlos más adelante.</li>
+              <li>Controlar el flujo del programa (por ejemplo, contadores en ciclos, condiciones).</li>
+              <li>Facilitar la reutilización de datos sin tener que escribirlos varias veces.</li>
+            </ul>
+            
+            <h3>Características Clave:</h3>
+            <ul>
+              <li><strong>Identificador:</strong> Nombre único y descriptivo (ej: <code>edad</code>).</li>
+              <li><strong>Tipo de Dato:</strong> Define qué clase de valor guarda.</li>
+              <li><strong>Ámbito (Scope):</strong> Determina en qué parte del código existe (local/global).</li>
+            </ul>
+
+            <h3>Ejemplos:</h3>
+            <div>
+              <img src="images/variables.png" alt="Pictures 06" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
+            </div>
+          </div>
+        </article>
+
+        <!-- Sección 4 -->
+        <article class="card week-card sec-4">
+          <div class="card-content">
+            <span class="week-badge">Sección 04</span>
+            <h2>Constantes</h2>
+            <h3>¿Qué son?</h3>
+            <p>Una constante es un espacio en la memoria que almacena un valor que no puede cambiar durante la ejecución del programa. Una vez que se le asigna un valor, este permanece fijo desde el inicio hasta el final del programa.</p>
+            <p>Al igual que las variables, tienen un nombre (identificador) que permite referirse a ellas, pero a diferencia de estas, su contenido es inmutable (no se puede cambiar).</p>
+
+            <h3>Diferencia: Variable vs. Constante</h3>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Criterio</th>
+                  <th>Variable</th>
+                  <th>Constante</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Valor</td>
+                  <td>Puede cambiar durante la ejecución</td>
+                  <td>Se fija una vez y no cambia (Inmutable)</td>
+                </tr>
+                <tr>
+                  <td>Uso Típico</td>
+                  <td>Almacenar datos que varían (contadores, entradas del usuario, resultados)</td>
+                  <td>Almacenar valores fijos conocidos (π, ITBMS)</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3>Ejemplos</h3>
+            <div class="code-block">
+Algoritmo Constante
+    Const_PI = 3.1416;
+
+    Definir radio como real;
+    Definir area como real;
+
+    Leer radio;	
+    area = PI * radio * radio;
+
+    Escribir "El área del círculo es: ", area;
+FinAlgoritmo
+            </div>
+          </div>
+        </article>
+
+        <!-- Sección 5 -->
+        <article class="card week-card sec-5">
+          <div class="card-content">
+            <span class="week-badge">Sección 05</span>
+            <h2>Tipos de Datos</h2>
+            <h3>¿Qué son?</h3>
+            <p>Los tipos de datos definen la clase de valor que puede almacenar una variable o constante, así como las operaciones que se pueden realizar con ella y la cantidad de memoria que ocupa. Son la clasificación básica de la información que maneja un programa.</p>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Tipo</th>
+                  <th>Descripción</th>
+                  <th>Ejemplo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Entero</strong></td>
+                  <td>Representa números sin decimales, ya sean positivos, negativos o cero. Se utiliza para contar, indexar o realizar operaciones matemáticas exactas.</td>
+                  <td><code>edad = 25</code></td>
+                </tr>
+                <tr>
+                  <td><strong>Real</strong></td>
+                  <td>Representa números con parte decimal (punto flotante). Se usa cuando se necesita mayor precisión, como en cálculos matemáticos, científicos o financieros.</td>
+                  <td><code>estatura = 1.75</code></td>
+                </tr>
+                <tr>
+                  <td><strong>Carácter</strong></td>
+                  <td>Representa un único símbolo: una letra, un dígito o un signo, encerrado normalmente entre comillas simples. Ocupa el menor espacio en memoria entre los tipos básicos.</td>
+                  <td><code>genero = 'M'</code></td>
+                </tr>
+                <tr>
+                  <td><strong>Cadena</strong></td>
+                  <td>Representa una secuencia de caracteres (texto), es decir, palabras, frases u oraciones completas. Se encierra normalmente entre comillas dobles.</td>
+                  <td><code>"Hola Mundo"</code></td>
+                </tr>
+                <tr>
+                  <td><strong>Booleano</strong></td>
+                  <td>Representa solo dos posibles valores: verdadero (true) o falso (false). Se utiliza principalmente en condiciones, comparaciones y control de flujo del programa.</td>
+                  <td><code>true / false</code></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3>Ejemplos</h3>
+            <div>
+              <img src="images/Datos.jpg" alt="Pictures 01" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
+            </div>
+          </div>
+        </article>
+
+        <!-- Sección 6 -->
+        <article class="card week-card sec-6">
+          <div class="card-content">
+            <span class="week-badge">Sección 06</span>
+            <h2>Entrada y Salida (I/O)</h2>
+            <h3>¿Qué es una entrada de datos?</h3>
+            <p>La entrada de datos (Input) es el proceso mediante el cual un programa recibe información desde el exterior para poder procesarla. Esta información puede provenir de distintas fuentes: el teclado, un archivo, una base de datos, un sensor, otro programa, etc.</p>
+            <p>En pseudocódigo, la entrada se representa comúnmente con la palabra clave Leer, y en un diagrama de flujo con el símbolo de paralelogramo (▱).</p>
+
+            <h3>Fuentes comunes de entrada:</h3>
+            <ul>
+              <li>Teclado (lo más común en ejercicios básicos)</li>
+              <li>Archivos (leer datos de un .txt, .csv, etc.)</li>
+              <li>Bases de datos</li>
+              <li>Sensores (en sistemas embebidos o IoT)</li>
+              <li>Otros programas o el mouse</li>
+            </ul>
+
+            <h3>¿Qué es una salida de datos?</h3>
+            <p>La salida de datos (Output) es el proceso mediante el cual un programa muestra o envía información hacia el exterior, es decir, el resultado del procesamiento realizado.</p>
+            <p>En pseudocódigo, se representa comúnmente con la palabra clave Escribir o Mostrar, y en el diagrama de flujo con el mismo símbolo de paralelogramo (▱).</p>
+
+            <h3>Destinos comunes de salida:</h3>
+            <ul>
+              <li>Pantalla (lo más común, mensajes en consola o interfaz gráfica)</li>
+              <li>Archivos (guardar resultados en un .txt, .csv, etc.)</li>
+              <li>Impresora</li>
+              <li>Bases de datos</li>
+              <li>Otros dispositivos (altavoces, actuadores, etc.)</li>
+            </ul>
+
+            <h3>Algoritmo Ejemplo I/O:</h3>
+            <div class="code-block">
+Algoritmo Entrada_Salida
+    Definir nombre como cadena;
+
+    Leer nombre;                        // ENTRADA
+    Escribir "Hola, ", nombre;          // SALIDA
+FinAlgoritmo
+            </div>
+          </div>
+        </article>
+
+        <!-- Sección 7 -->
+        <article class="card week-card sec-7">
+          <div class="card-content">
+            <span class="week-badge">Sección 07</span>
+            <h2>Estructuras Condicionales</h2>
+            <h3>¿Qué es una condición?</h3>
+            <p>Una condición es una expresión lógica que se evalúa y da como resultado un valor verdadero (true) o falso (false). Se construye generalmente comparando valores mediante operadores relacionales (=, ≠, &gt;, &lt;, &gt;=, &lt;=) y, en ocasiones, combinando varias comparaciones con operadores lógicos (Y/AND, O/OR, NO/NOT).</p>
+
+            <h3>¿Para qué se utilizan?</h3>
+            <p>Las condiciones se utilizan para controlar el flujo de un programa, permitiendo que este tome decisiones y ejecute distintas acciones dependiendo de si una situación se cumple o no. Gracias a ellas, un programa deja de ser una simple secuencia de instrucciones y se vuelve capaz de reaccionar a diferentes escenarios (datos del usuario, resultados de cálculos, estados del sistema, etc.).</p>
+            <p>Se usan mediante estructuras llamadas estructuras de decisión o estructuras condicionales, cuya palabra clave principal es Si (If).</p>
+
+            <h3>Condición simple</h3>
+            <p>Evalúa una sola condición: si se cumple, se ejecuta un bloque de instrucciones; si no se cumple, simplemente no se hace nada (no hay alternativa).</p>
+            <div class="code-block">
+Algoritmo Condicion_Simple
+    Definir edad como entero;
+    Leer edad;
+    Si edad &gt;= 18 Entonces
+        Escribir "Eres mayor de edad";
+    FinSi
+FinAlgoritmo
+            </div>
+
+            <h3>Condición doble</h3>
+            <p>Evalúa una condición y ofrece dos caminos posibles: uno si se cumple (Entonces) y otro si no se cumple (Sino).</p>
+            <div class="code-block">
+Algoritmo Condicion_Doble
+    Definir edad como entero;
+    Leer edad;
+    Si edad &gt;= 18 Entonces
+        Escribir "Eres mayor de edad";
+    Sino
+        Escribir "Eres menor de edad";
+    FinSi
+FinAlgoritmo
+            </div>
+
+            <h3>Condición Anidada</h3>
+            <p>Son condicionales dentro de otros condicionales, es decir, dentro del bloque Entonces o Sino de una condición se coloca otra estructura Si. Se utilizan cuando hay más de dos posibles resultados o cuando una decisión depende de otra.</p>
+            <div class="code-block">
+Algoritmo Condicion_Anidada
+    Definir nota como entero;
+    Leer nota;
+    Si nota &gt;= 9 Entonces
+        Escribir "Excelente";
+    Sino
+        Si nota &gt;= 7 Entonces
+            Escribir "Bueno";
+        Sino
+            Si nota &gt;= 6 Entonces
+                Escribir "Aprobado";
+            Sino
+                Escribir "Reprobado";
+            FinSi
+        FinSi
+    FinSi
+FinAlgoritmo
+            </div>
+
+            <h3>Importancia en la toma de decisiones de un programa</h3>
+            <ul>
+              <li>Permiten que el programa "piense": en lugar de ejecutar siempre los mismos pasos, puede adaptar su comportamiento según los datos recibidos.</li>
+              <li>Hacen posible resolver problemas reales, que casi siempre implican distintos escenarios (validar una contraseña, clasificar edades, aprobar o rechazar una solicitud, etc.).</li>
+              <li>Son la base de estructuras más complejas, como los ciclos controlados por condición (Mientras) o la validación de datos de entrada.</li>
+              <li>Evitan errores en la ejecución, al permitir verificar antes de actuar (por ejemplo, comprobar que un número no sea cero antes de dividir).</li>
+              <li>Reflejan la lógica del mundo real dentro del programa: casi cualquier decisión humana ("si llueve, llevo paraguas; si no, no lo llevo") se puede traducir directamente a una estructura condicional.</li>
+            </ul>
+            <p>En resumen, sin condicionales, los programas serían simples secuencias fijas de instrucciones, incapaces de adaptarse a distintas situaciones o datos.</p>
+          </div>
+        </article>
+
+        <!-- Sección 8 -->
+        <article class="card week-card sec-8">
+          <div class="card-content">
+            <span class="week-badge">Sección 08</span>
+            <h2>Ciclos Repetitivos (Bucles)</h2>
+            <h3>¿Qué es un ciclo repetitivo?</h3>
+            <p>Un ciclo repetitivo (también llamado bucle, iteración o estructura repetitiva) es una estructura de control que permite ejecutar un bloque de instrucciones varias veces, mientras se cumpla una condición o hasta alcanzar un número determinado de repeticiones.</p>
+
+            <h3>¿Para qué se utilizan?</h3>
+            <ul>
+              <li>Evitar repetir código: en lugar de escribir 100 veces Escribir "Hola", se usa un ciclo.</li>
+              <li>Recorrer datos: por ejemplo, procesar todos los elementos de una lista o arreglo.</li>
+              <li>Validar entradas: pedir un dato hasta que el usuario lo ingrese correctamente.</li>
+              <li>Realizar cálculos acumulativos: sumas, promedios, factoriales, tablas de multiplicar.</li>
+              <li>Crear menús que se repiten hasta que el usuario decida salir.</li>
+            </ul>
+
+            <h3>Ciclo Para</h3>
+            <p>Se usa cuando se sabe de antemano cuántas veces se repetirá el bloque. Utiliza una variable contador que va desde un valor inicial hasta un valor final, aumentando automáticamente en cada vuelta.</p>
+            <div class="code-block">
+Algoritmo Ciclo_Para
+    Definir i Como Entero;
+    Para i &lt;- 1 Hasta 5 Con Paso 1 Hacer
+        Escribir i;
+    FinPara
+FinAlgoritmo
+            </div>
+
+            <h3>Ciclo Mientras</h3>
+            <p>Repite el bloque mientras la condición sea verdadera. La condición se evalúa antes de ejecutar el bloque, por lo que, si desde el inicio es falsa, el bloque no se ejecuta ninguna vez.</p>
+            <div class="code-block">
+Algoritmo Ciclo_Mientras
+    Definir i Como Entero;
+    i &lt;- 1;
+    Mientras i &lt;= 5 Hacer
+        Escribir i;
+        i &lt;- i + 1;
+    FinMientras
+FinAlgoritmo
+            </div>
+
+            <h3>Ciclo Repetir</h3>
+            <p>Repite el bloque hasta que la condición sea verdadera. La condición se evalúa al final, por lo que el bloque se ejecuta al menos una vez.</p>
+            <div class="code-block">
+Algoritmo Condicion_Repetir
+    Definir clave Como Entero;
+    Repetir
+        Escribir "Ingresa la clave:";
+        Leer clave;
+    Hasta Que clave = 1234;
+    Escribir "Acceso concedido";
+FinAlgoritmo
+            </div>
+          </div>
+        </article>
+
+        <!-- Sección 9 -->
+        <article class="card week-card sec-9">
+          <div class="card-content">
+            <span class="week-badge">Sección 09</span>
+            <h2>Relación entre los conceptos</h2>
+            <p>Todos los temas que hemos estudiado no son piezas aisladas: se combinan entre sí para formar un programa completo.</p>
+            <p>Aprendimos cómo se construye un programa, que es la base para después poder analizarlos, protegerlos y encontrar sus fallas. Un programa sigue un flujo de cinco etapas:</p>
+            
+            <ol style="color: var(--text-muted); font-size: 0.88rem; padding-left: 18px;">
+              <li><strong>Entrada:</strong> Es el punto de partida, el programa recibe información desde afuera usando Leer. Esa información se guarda en variables, y cada una tiene un tipo de datos (entero, real, carácter, cadena o lógico) que define qué valores puede almacenar.</li>
+              <li><strong>Procesamiento:</strong> Una vez que los datos están guardados, el programa trabaja con ellos: hace cálculos, asigna valores con &lt;- y transforma la información. Aquí las variables van cambiando de valor y se obtienen resultados intermedios.</li>
+              <li><strong>Condición:</strong> Aquí el programa toma decisiones con las estructuras Si / SiNo. Según el resultado de una condición (verdadero o falso), se ejecuta un camino u otro. Las condiciones pueden ser simples, dobles o anidadas, y sirven, por ejemplo, para validar datos o clasificar resultados.</li>
+              <li><strong>Repetición:</strong> Cuando una parte del programa debe ejecutarse varias veces, se usan los ciclos (Para, Mientras, Repetir). Los ciclos casi siempre se apoyan en condiciones para saber cuándo detenerse, y dentro de ellos también se pueden repetir entradas, procesos y decisiones.</li>
+              <li><strong>Salida:</strong> Al final, el programa muestra el resultado con Escribir: en pantalla, en un archivo, etc. Es lo que el usuario ve y lo que le da sentido a todo el proceso.</li>
+            </ol>
+            </div>
+          </div>
+        </article>
+
+        <!-- Sección 10 -->
+        <article class="card week-card sec-10">
+          <div class="card-content">
+            <span class="week-badge">Sección 10</span>
+            <h2>Conclusiones</h2>
+            <p>Aprender pseudocódigo nos enseña a pensar como programadores y a resolver problemas lógicos, matemáticos y de diversa índole mediante procesos estructurados. Antes de escribir una sola línea de código, es fundamental analizar el problema, desglosarlo en pasos y ordenarlo de manera lógica; precisamente, esta capacidad de resolución es una de las habilidades más valoradas en la industria del software. Asimismo, dominar el uso de variables, condiciones y ciclos es clave para construir programas más eficientes, legibles y con menor margen de error.</p>
+            <p>La elaboración de cualquier programa se fundamenta en cinco etapas esenciales. Sin importar la complejidad del sistema —sea una simple calculadora, una aplicación bancaria, un videojuego o un protocolo de seguridad— el flujo principal es siempre el mismo: recibir datos, procesarlos, tomar decisiones, iterar tareas y entregar un resultado.</p>
+            <p>Hoy en día, campos de alta demanda como la inteligencia artificial, el desarrollo web, el análisis de datos y la ciberseguridad se erigen sobre estas bases. En ciberseguridad, por ejemplo, identificar una vulnerabilidad o proteger un sistema requiere entender primero cómo entra, se procesa y se despliega la información. Por ello, aunque estos conceptos parezcan elementales, representan el pilar fundamental para cualquier trayectoria en la programación.</p>
+          </div>
+        </article>
+
+        <!-- Sección 11 -->
+        <article class="card week-card sec-11">
+          <div class="card-content">
+            <span class="week-badge">Sección 11</span>
+            <h2>Referencias Bibliográficas</h2>
+            <div class="biblio-list">
+              <h3>Fuentes Consultadas:</h3>
+              <ul>
+                <li>
+                  Genbeta. (2021). <i>PSeInt, un intérprete de pseudocódigo para empezar a estudiar programación</i>.<br>
+                  <a href="https://www.genbeta.com/desarrollo/pseint-interprete-pseudocodigo-para-empezar-a-estudiar-programacion" target="_blank" rel="noopener noreferrer">
+                    https://www.genbeta.com
+                  </a>
+                </li>
+                <li>
+                  Lucidchart. (s. f.). <i>Diagrama de flujo: Qué es, símbolos y ejemplos</i>. Lucid Software.<br>
+                  <a href="https://www.lucidchart.com/pages/es/tutorial/diagrama-de-flujo" target="_blank" rel="noopener noreferrer">
+                    https://www.lucidchart.com
+                  </a>
+                </li>
+                <li>
+                  Novara, P. (2003). <i>PSeInt [Software]</i>. SourceForge.<br>
+                  <a href="http://pseint.sourceforge.net/" target="_blank" rel="noopener noreferrer">
+                    http://pseint.sourceforge.net/
+                  </a>
+                </li>
+                <li>
+                  Xunta de Galicia. (s. f.). <i>Bloque 1: Pseudocódigo</i>. Educación Dixital.<br>
+                  <a href="https://edu.xunta.gal/centros/iesblancoamorculleredo/aulavirtual/mod/resource/view.php?id=19486" target="_blank" rel="noopener noreferrer">
+                    https://edu.xunta.gal
+                  </a>
+                </li>
+				<li>Joyanes Aguilar, L. (2008).<i>Fundamentos de Programación: Algoritmos, estructura de datos y objetos</i>. McGraw-Hill.</li>
+				<li>KeepCoding. (2024). <i>Diagramas de flujo y lógica condicional</i>. Recursos para desarrolladores.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+      </main>
+    </div>
+
+  </div>
+
+  <script>
+    // Al presionar 'Iniciar Presentación', abre directamente la Sección 01
+    function openPortfolio() {
+      window.location.hash = 'sec-1';
+    }
+
+    function showCover() {
+      window.location.hash = '';
+    }
+
+    function filterWeek(weekClass) {
+      window.location.hash = weekClass;
+    }
+
+    function handleRouting() {
+      const hash = window.location.hash.replace('#', '');
+      const coverView = document.getElementById('cover-view');
+      const portfolioView = document.getElementById('portfolio-view');
+      const cards = document.querySelectorAll('.week-card');
+
+      if (!hash) {
+        coverView.classList.remove('hidden');
+        portfolioView.classList.add('hidden');
+        window.scrollTo(0, 0);
+        return;
+      }
+
+      coverView.classList.add('hidden');
+      portfolioView.classList.remove('hidden');
+
+      // Filtra y muestra únicamente la tarjeta correspondiente a la sección seleccionada
+      cards.forEach(card => {
+        if (card.classList.contains(hash)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      window.scrollTo(0, 0);
+    }
+
+    window.addEventListener('hashchange', handleRouting);
+    window.addEventListener('DOMContentLoaded', handleRouting);
+  </script>
+
+</body>
+</html>
